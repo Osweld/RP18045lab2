@@ -18,6 +18,7 @@ class HomeFragment : Fragment(), GestureDetector.OnGestureListener, GestureDetec
     private lateinit var video:VideoView
     private lateinit var mediaController: MediaController
     private var gDetector: GestureDetector? = null
+    private var position:Int = 0
     private var isRunning:Boolean = false
 
     // This property is only valid between onCreateView and
@@ -69,11 +70,18 @@ class HomeFragment : Fragment(), GestureDetector.OnGestureListener, GestureDetec
 
     override fun onScroll(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float): Boolean {
 
+        if (p2 < p3) {
+            //  video.seekTo(video.currentPosition-1000)
+        }
+        if (p2 > p3) {
+            // video.seekTo(video.currentPosition+1000)
+
+        }
         return true
     }
 
     override fun onLongPress(p0: MotionEvent?) {
-
+        video.seekTo(video.currentPosition+10000)
     }
 
     override fun onFling(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float): Boolean {
@@ -82,7 +90,12 @@ class HomeFragment : Fragment(), GestureDetector.OnGestureListener, GestureDetec
     }
 
     override fun onSingleTapConfirmed(p0: MotionEvent?): Boolean {
-   video.resume()
+        if(!isRunning){
+            video.resume()
+            video.seekTo(position)
+            video.start()
+            isRunning = true
+        }
         return true
     }
 
@@ -92,7 +105,13 @@ class HomeFragment : Fragment(), GestureDetector.OnGestureListener, GestureDetec
     }
 
     override fun onDoubleTapEvent(p0: MotionEvent?): Boolean {
-        video.pause()
+        if(isRunning){
+            video.pause()
+            position =  video.currentPosition
+            isRunning = false
+        }
+
+
         return true
     }
 }
